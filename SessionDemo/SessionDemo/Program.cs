@@ -1,9 +1,23 @@
+using dotenv.net;
+using StackExchange.Redis;
+
+// Load environmental variables
+DotEnv.Load(options: new DotEnvOptions(probeForEnv: true, probeLevelsToSearch: 6));
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add Redis
+var redisPort = Environment.GetEnvironmentVariable("REDIS_PORT");
+var redisPassword = Environment.GetEnvironmentVariable("REDIS_PASSWORD");
+var connectionString = $"localhost:{redisPort},password={redisPassword}";
+
+var multiplexer = await ConnectionMultiplexer.ConnectAsync(connectionString);
+builder.Services.AddSingleton<IConnectionMultiplexer>(multiplexer);
 
 var app = builder.Build();
 
@@ -16,28 +30,4 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
