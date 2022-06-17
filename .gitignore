@@ -1,0 +1,6 @@
+**/obj/**
+**/bin/**
+**/.vs/**
+**/node_modules/**
+**/public/**
+backend/NeuroEhr/.idea/.idea.NeuroEhr/.idea/encodings.xml
