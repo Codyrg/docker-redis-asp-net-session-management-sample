@@ -1,4 +1,8 @@
+using System;
 using dotenv.net;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using StackExchange.Redis;
 
 // Load environmental variables
