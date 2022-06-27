@@ -11,8 +11,8 @@
     /// </summary>
     public class SessionService
     {
-        private ILogger<SessionService> _logger;
-        private IConnectionMultiplexer _connectionMultiplexer;
+        private readonly ILogger<SessionService> _logger;
+        private readonly IConnectionMultiplexer _connectionMultiplexer;
         
         /// <summary>
         /// Create new SessionService
@@ -69,6 +69,6 @@
         {
             var database = _connectionMultiplexer.GetDatabase();
             return database.KeyDelete(sessionKey);
-        }
+        } 
     }
 }
